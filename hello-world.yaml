@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world-app
+  template:
+    metadata:
+      labels:
+        app: hello-world-app
+    spec:
+      containers:
+        - name: hello-world
+          image: obinnaaliogor/hello-world-image
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: mysql-service
+            - name: DB_USER
+              value: obinna
+            - name: DB_PASSWORD
+              value: obinna@123
+            - name: DB_DATABASE
+              value: hello-world-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-service
+spec:
+  selector:
+    app: hello-world-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: NodePort
+
